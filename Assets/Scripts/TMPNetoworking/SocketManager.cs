@@ -25,6 +25,7 @@ public class SocketManager : Singleton<SocketManager>
 
     [Header("Player Manage")]
     private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
+    private GameObject localPlayer;
 
     void Start()
     {
@@ -42,6 +43,10 @@ public class SocketManager : Singleton<SocketManager>
         socket.On("pong", response =>
         {
             DebugOpt.Log("[Pong] pong received");
+            lock (queueLock)
+            {
+                actionQueue.Enqueue(InitPlayer);
+            }
         });
 
         // 위치 업데이트
@@ -78,6 +83,25 @@ public class SocketManager : Singleton<SocketManager>
     private void InitPlayer()
     {
         // pong 받으면 플레이어 초기화
+        DebugOpt.Log("[SocketManager] Initializing local player");
+
+        // 로컬 플레이어 초기화
+        localPlayer = PoolManager.Instance.GetObject();
+        if (localPlayer != null)
+        {
+            localPlayer.transform.position = Vector3.zero;
+            players[socket.Id] = localPlayer;
+
+            // 로컬 플레이어 컨트롤러 추가
+            var controller = localPlayer.AddComponent<PlayerController>();
+            controller.InitPlayerController(localPlayer);
+
+            DebugOpt.Log("[SocketManager] Local player initialized with controller");
+        }
+        else
+        {
+            DebugOpt.LogError("[SocketManager] Failed to initialize local player");
+        }
     }
 
 

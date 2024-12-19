@@ -19,8 +19,24 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        //// PoolManager에서 오브젝트 가져오기
+        //playerObject = PoolManager.Instance.GetObject();
+        //if (playerObject == null)
+        //{
+        //    DebugOpt.LogError("[Error] failed to bring playerObj");
+        //}
+        //else
+        //{
+        //    playerObject.transform.position = Vector3.zero;
+        //}
+        //StartCoroutine(SendPlayerPositionRoutine(updatePeriod));
+    }
+
+    public void InitPlayerController(GameObject parentObject)
+    {
         // PoolManager에서 오브젝트 가져오기
-        playerObject = PoolManager.Instance.GetObject();
+        //playerObject = PoolManager.Instance.GetObject();
+        playerObject = parentObject; // 부모 오브젝트;
         if (playerObject == null)
         {
             DebugOpt.LogError("[Error] failed to bring playerObj");
@@ -31,6 +47,7 @@ public class PlayerController : MonoBehaviour
         }
         StartCoroutine(SendPlayerPositionRoutine(updatePeriod));
     }
+
 
     private void FixedUpdate()
     {
