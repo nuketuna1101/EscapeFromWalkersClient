@@ -54,7 +54,8 @@ public class GridManager : Singleton<GridManager>
                 if (cellValue == 1)
                 {
                     Vector3 spawnPosition = gridOrigin + new Vector3(x * cellSize, y * cellSize, 0);
-                    GameObject tmp = PoolManager.Instance.GetObject();
+                    //GameObject tmp = PoolManager.Instance.GetObject();
+                    GameObject tmp = PoolManager.Instance.GetObject("Block");
                     tmp.transform.position = spawnPosition;
                 }
             }

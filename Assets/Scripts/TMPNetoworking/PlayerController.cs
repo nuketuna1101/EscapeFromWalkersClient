@@ -108,7 +108,8 @@ public class PlayerController : MonoBehaviour
         // PoolManager 회수
         if (playerObject != null)
         {
-            PoolManager.Instance.ReturnObject(playerObject);
+            //PoolManager.Instance.ReturnObject(playerObject);
+            PoolManager.Instance.ReturnObject("Tmp", playerObject);
         }
         StopAllCoroutines();
     }

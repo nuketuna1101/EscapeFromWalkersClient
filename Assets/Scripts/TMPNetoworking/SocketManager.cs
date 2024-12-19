@@ -111,7 +111,8 @@ public class SocketManager : Singleton<SocketManager>
         DebugOpt.Log("[SocketManager] Initializing local player");
 
         // 로컬 플레이어 초기화
-        localPlayer = PoolManager.Instance.GetObject();
+        //localPlayer = PoolManager.Instance.GetObject();
+        localPlayer = PoolManager.Instance.GetObject("Tmp");
         if (localPlayer != null)
         {
             localPlayer.transform.position = Vector3.zero;
@@ -141,7 +142,8 @@ public class SocketManager : Singleton<SocketManager>
         if (!players.ContainsKey(playerData.uuid))
         {
             DebugOpt.Log("[SM] 새로 생성");
-            GameObject newPlayer = PoolManager.Instance.GetObject();
+            //GameObject newPlayer = PoolManager.Instance.GetObject();
+            GameObject newPlayer = PoolManager.Instance.GetObject("Tmp");
             newPlayer.transform.position = Vector3.zero;
             players.Add(playerData.uuid, newPlayer);
         }
@@ -181,7 +183,8 @@ public class SocketManager : Singleton<SocketManager>
         if (players.ContainsKey(uuid))
         {
             GameObject player = players[uuid];
-            PoolManager.Instance.ReturnObject(player);
+            //PoolManager.Instance.ReturnObject(player);
+            PoolManager.Instance.ReturnObject("Tmp", player);
             players.Remove(uuid);
         }
     }
