@@ -75,6 +75,11 @@ public class SocketManager : Singleton<SocketManager>
         DebugOpt.Log("[Ping] Ping test");
     }
 
+    private void InitPlayer()
+    {
+        // pong 받으면 플레이어 초기화
+    }
+
 
     private void HandleLocationUpdate(ResponseDTO playerData)
     {
