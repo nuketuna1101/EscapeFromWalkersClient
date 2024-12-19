@@ -59,6 +59,7 @@ public class SocketManager : Singleton<SocketManager>
                     try
                     {
                         var playerData = response.GetValue<ResponseDTO>();
+                        // 받은 데이터로 위치 동기화
                         HandleLocationUpdate(playerData);
                     }
                     catch (Exception e)
@@ -78,8 +79,10 @@ public class SocketManager : Singleton<SocketManager>
                 {
                     try
                     {
+                        // 받은 데이터로 map asset 전달
                         var playerData = response.GetValue<ResponseDTO>();
-                        DebugOpt.Log("[Info] maps : " + playerData.maps);
+                        var mapAssets = playerData.maps.data;
+                        GridManager.Instance.SetMapAsset(mapAssets);
                     }
                     catch (Exception e)
                     {
@@ -117,11 +120,9 @@ public class SocketManager : Singleton<SocketManager>
             // 로컬 플레이어 컨트롤러 추가
             var controller = localPlayer.AddComponent<PlayerController>();
             controller.InitPlayerController(localPlayer);
-
             DebugOpt.Log("[SocketManager] Local player initialized with controller");
-
             // 그리드 매니저 초기화
-            GridManager.Instance.InitGridAssets();
+            GetMapAssets();
 
         }
         else
