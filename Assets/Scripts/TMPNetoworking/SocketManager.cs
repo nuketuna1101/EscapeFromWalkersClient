@@ -50,7 +50,7 @@ public class SocketManager : Singleton<SocketManager>
         });
 
         // 위치 업데이트
-        socket.On("locationUpdate", async response =>
+        socket.On("locationUpdate", response =>
         {
             lock (queueLock)
             {
@@ -68,6 +68,28 @@ public class SocketManager : Singleton<SocketManager>
                 });
             }
         });
+
+        // map asset 요청 응답
+        socket.On("resMapAssets", response =>
+        {
+            lock (queueLock)
+            {
+                actionQueue.Enqueue(() =>
+                {
+                    try
+                    {
+                        var playerData = response.GetValue<ResponseDTO>();
+                        DebugOpt.Log("[Info] maps : " + playerData.maps);
+                    }
+                    catch (Exception e)
+                    {
+                        DebugOpt.LogError("[Error] Exception occurred: " + e.Message);
+                    }
+                });
+            }
+        });
+
+
         // 연결 시작
         socket.ConnectAsync();
     }
@@ -97,6 +119,10 @@ public class SocketManager : Singleton<SocketManager>
             controller.InitPlayerController(localPlayer);
 
             DebugOpt.Log("[SocketManager] Local player initialized with controller");
+
+            // 그리드 매니저 초기화
+            GridManager.Instance.InitGridAssets();
+
         }
         else
         {
@@ -139,6 +165,7 @@ public class SocketManager : Singleton<SocketManager>
 
     public void SendPlayerPosition(Vector3 position)
     {
+        // server에 플레이어 위치 전송
         var positionData = new
         {
             uuid = socket.Id,
@@ -158,6 +185,12 @@ public class SocketManager : Singleton<SocketManager>
         }
     }
 
+    public void GetMapAssets()
+    {
+        // server에게 그리드 맵 에셋 요청
+        DebugOpt.Log("[SM] GetMapAssets emitted");
+        socket.EmitAsync("reqMapAssets", socket.Id);
+    }
 
     private void Update()
     {
@@ -172,5 +205,3 @@ public class SocketManager : Singleton<SocketManager>
     }
 
 }
-
-
