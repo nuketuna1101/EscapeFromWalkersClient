@@ -24,12 +24,14 @@ public class SocketManager : Singleton<SocketManager>
     public GameObject playerPrefab;
     private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
 
-    private SynchronizationContext mainThreadContext;
+    //private SynchronizationContext mainThreadContext;
+    private readonly Queue<Action> actionQueue = new Queue<Action>();
+    private readonly object queueLock = new object();
 
     void Start()
     {
         // 메인 스레드 SynchronizationContext 저장
-        mainThreadContext = SynchronizationContext.Current;
+        //mainThreadContext = SynchronizationContext.Current;
         // SocketIO 인스턴스를 생성하고 서버와 연결
         socket = new SocketIOClient.SocketIO(serverURL);
 
@@ -49,9 +51,7 @@ public class SocketManager : Singleton<SocketManager>
         // 위치 업데이트
         socket.On("locationUpdate", async response =>
         {
-            // EAP TAP 이벤트 / 태스크
-            DebugOpt.Log("[locationUpdate] lu res received");
-
+            /*
             // TO DO :: 쓰레드 로그 찍어서 메인인지 확인
             mainThreadContext.Post(async _ => 
             {
@@ -68,6 +68,22 @@ public class SocketManager : Singleton<SocketManager>
                 }
 
             }, null);
+            */
+            lock (queueLock)
+            {
+                actionQueue.Enqueue(() =>
+                {
+                    try
+                    {
+                        var playerData = response.GetValue<ResponseDTO>();
+                        HandleLocationUpdate(playerData);
+                    }
+                    catch (Exception e)
+                    {
+                        DebugOpt.LogError("[Error] Exception occurred: " + e.Message);
+                    }
+                });
+            }
 
         });
 
@@ -83,7 +99,7 @@ public class SocketManager : Singleton<SocketManager>
         DebugOpt.Log("[Ping] Ping test");
     }
 
-    async private Task HandleLocationUpdateAsync(ResponseDTO playerData)
+    private void HandleLocationUpdate(ResponseDTO playerData)
     {
         Vector3 position = playerData.position.ToVector3();
         DebugOpt.Log("[SM] HandleLocationUpdateAsync called");
@@ -134,6 +150,19 @@ public class SocketManager : Singleton<SocketManager>
             GameObject player = players[uuid];
             PoolManager.Instance.ReturnObject(player);
             players.Remove(uuid);
+        }
+    }
+
+
+    private void Update()
+    {
+        lock (queueLock) 
+        {
+            while (actionQueue.Count > 0)
+            {
+                var action = actionQueue.Dequeue();
+                action.Invoke();
+            }
         }
     }
 

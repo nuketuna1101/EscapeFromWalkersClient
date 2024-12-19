@@ -3986,7 +3986,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1961728389}
-  - component: {fileID: 1961728388}
+  - component: {fileID: 1961728390}
   m_Layer: 0
   m_Name: MySceneManager
   m_TagString: Untagged
@@ -3994,18 +3994,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1961728388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1961728387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d57dad2faf3258245a07d2cb90f660ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1961728389
 Transform:
   m_ObjectHideFlags: 0
@@ -4021,6 +4009,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1961728390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961728387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12fae5e3b7590c34b8eaa800738fd5db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imgFade: {fileID: 1796373860}
 --- !u!1 &2042828537
 GameObject:
   m_ObjectHideFlags: 0
@@ -4030,7 +4031,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2042828539}
-  - component: {fileID: 2042828538}
+  - component: {fileID: 2042828540}
   m_Layer: 0
   m_Name: BattleManager
   m_TagString: Untagged
@@ -4038,18 +4039,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2042828538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2042828537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3eedd48ab7452294e94b0c8d1d749170, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2042828539
 Transform:
   m_ObjectHideFlags: 0
@@ -4065,6 +4054,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2042828540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042828537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5098977ec9e82c34d9f5b36c12d06f63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2103905203
 GameObject:
   m_ObjectHideFlags: 0
@@ -4199,7 +4200,15 @@ PrefabInstance:
     - target: {fileID: 8810400948401539933, guid: 75b506ea9155c064385592eb2678e063, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1961728388}
+      objectReference: {fileID: 1961728390}
+    - target: {fileID: 8810400948401539933, guid: 75b506ea9155c064385592eb2678e063, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadMyScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810400948401539933, guid: 75b506ea9155c064385592eb2678e063, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: EFWSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
