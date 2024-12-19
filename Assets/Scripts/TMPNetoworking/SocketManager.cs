@@ -15,23 +15,19 @@ using Newtonsoft.Json;
 using System.Threading;
 
 public class SocketManager : Singleton<SocketManager>
-{  
+{
     // socket vars
+    [Header("Socket Manage")]
     private SocketIOClient.SocketIO socket;
     private const string serverURL = "http://localhost:3010";
-
-
-    public GameObject playerPrefab;
-    private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
-
-    //private SynchronizationContext mainThreadContext;
     private readonly Queue<Action> actionQueue = new Queue<Action>();
     private readonly object queueLock = new object();
 
+    [Header("Player Manage")]
+    private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
+
     void Start()
     {
-        // 메인 스레드 SynchronizationContext 저장
-        //mainThreadContext = SynchronizationContext.Current;
         // SocketIO 인스턴스를 생성하고 서버와 연결
         socket = new SocketIOClient.SocketIO(serverURL);
 
@@ -51,24 +47,6 @@ public class SocketManager : Singleton<SocketManager>
         // 위치 업데이트
         socket.On("locationUpdate", async response =>
         {
-            /*
-            // TO DO :: 쓰레드 로그 찍어서 메인인지 확인
-            mainThreadContext.Post(async _ => 
-            {
-                // TO DO :: action은 queue로 관리
-                // TO DO ::main thread에서 관리되는 queue와 lock으로 비동기에 대한 순차처리
-                try
-                {
-                    var playerData = response.GetValue<ResponseDTO>();
-                    await HandleLocationUpdateAsync(playerData);
-                }
-                catch (Exception e)
-                {
-                    DebugOpt.LogError("[Error] Exception occurred: " + e.Message);
-                }
-
-            }, null);
-            */
             lock (queueLock)
             {
                 actionQueue.Enqueue(() =>
@@ -84,9 +62,7 @@ public class SocketManager : Singleton<SocketManager>
                     }
                 });
             }
-
         });
-
         // 연결 시작
         socket.ConnectAsync();
     }
@@ -99,6 +75,7 @@ public class SocketManager : Singleton<SocketManager>
         DebugOpt.Log("[Ping] Ping test");
     }
 
+
     private void HandleLocationUpdate(ResponseDTO playerData)
     {
         Vector3 position = playerData.position.ToVector3();
@@ -110,7 +87,6 @@ public class SocketManager : Singleton<SocketManager>
             DebugOpt.Log("[SM] 새로 생성");
             GameObject newPlayer = PoolManager.Instance.GetObject();
             newPlayer.transform.position = Vector3.zero;
-            //newPlayer.transform.position = position;
             players.Add(playerData.uuid, newPlayer);
         }
         else
